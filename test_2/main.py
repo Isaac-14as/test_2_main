@@ -1,3 +1,6 @@
+from re import M
+
+
 class Matrix():
     def __init__(self, matrix_list):
         self.matrix_list = matrix_list
@@ -22,42 +25,59 @@ class Matrix():
 
     def __sub__(self, another_matrix):
         answer = []
-        for i in range(len(self.matrix_list)):
-            a = []
-            for j in range(len(self.matrix_list[0])):
-                another_list = getattr(another_matrix, 'matrix_list')[i][j]
-                a.append(self.matrix_list[i][j] - another_list)
-            answer.append(a)
+        flag_1 = len(self.matrix_list) == len(getattr(another_matrix, 'matrix_list'))
+        flag_2 = len(self.matrix_list[0]) == len(getattr(another_matrix, 'matrix_list')[0])
+        if flag_1 and flag_2:
+            for i in range(len(self.matrix_list)):
+                a = []
+                for j in range(len(self.matrix_list[0])):
+                    another_list = getattr(another_matrix, 'matrix_list')[i][j]
+                    a.append(self.matrix_list[i][j] - another_list)
+                answer.append(a)
+        else:
+            return "Матрицы отличаются размерностью"
         return Matrix(answer)
     
 
     def __add__(self, another_matrix):
         answer = []
-        for i in range(len(self.matrix_list)):
-            a = []
-            for j in range(len(self.matrix_list[0])):
-                another_list = getattr(another_matrix, 'matrix_list')[i][j]
-                a.append(self.matrix_list[i][j] + another_list)
-            answer.append(a)
+        flag_1 = len(self.matrix_list) == len(getattr(another_matrix, 'matrix_list'))
+        flag_2 = len(self.matrix_list[0]) == len(getattr(another_matrix, 'matrix_list')[0])
+        if flag_1 and flag_2:
+            for i in range(len(self.matrix_list)):
+                a = []
+                for j in range(len(self.matrix_list[0])):
+                    another_list = getattr(another_matrix, 'matrix_list')[i][j]
+                    a.append(self.matrix_list[i][j] + another_list)
+                answer.append(a)
+        else:
+            return "Матрицы отличаются размерностью"
         return Matrix(answer)
     
 
     def __mul__(self, another_matrix):
         answer = []
-        for i in range(len(self.matrix_list)):
-            sub_answer = []
-            for j in range(len(getattr(another_matrix, 'matrix_list')[0])):
-                c = 0
-                for r in range(len(getattr(another_matrix, 'matrix_list'))):
-                    c += self.matrix_list[i][r] * getattr(another_matrix, 'matrix_list')[r][j]
-                sub_answer.append(c)
-            answer.append(sub_answer)
+        flag = len(self.matrix_list[0]) == len(getattr(another_matrix, 'matrix_list'))
+        if flag:
+            for i in range(len(self.matrix_list)):
+                sub_answer = []
+                for j in range(len(getattr(another_matrix, 'matrix_list')[0])):
+                    c = 0
+                    for r in range(len(getattr(another_matrix, 'matrix_list'))):
+                        c += self.matrix_list[i][r] * getattr(another_matrix, 'matrix_list')[r][j]
+                    sub_answer.append(c)
+                answer.append(sub_answer)
+        else:
+            return "Кол-во столбцов первой матрицы не равно кол-ву строк второй"
         return Matrix(answer)
 
 
     def __truediv__(self, divisor):
         answer = self.matrix_list
-        for i in range(len(self.matrix_list)):
-            for j in range(len(self.matrix_list[0])):
-                answer[i][j] = answer[i][j] / divisor
+        if divisor != 0:
+            for i in range(len(self.matrix_list)):
+                for j in range(len(self.matrix_list[0])):
+                    answer[i][j] = answer[i][j] / divisor
+        else: 
+            return "Невозможно деление на 0"
         return Matrix(answer)  
